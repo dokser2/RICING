@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_ricing" default="compile.module.ricing">
+  <dirname property="module.ricing.basedir" file="${ant.file.module_ricing}"/>
+  
+  <property name="module.jdk.home.ricing" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ricing" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ricing" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ricing" value="-encoding UTF-8 -source 11 -target 11 ${compiler.args}"/>
+  
+  <property name="ricing.output.dir" value="${module.ricing.basedir}/out/production/RICING"/>
+  <property name="ricing.testoutput.dir" value="${module.ricing.basedir}/out/test/RICING"/>
+  
+  <path id="ricing.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ricing.module.production.classpath">
+    <path refid="${module.jdk.classpath.ricing}"/>
+  </path>
+  
+  <path id="ricing.runtime.production.module.classpath">
+    <pathelement location="${ricing.output.dir}"/>
+  </path>
+  
+  <path id="ricing.module.classpath">
+    <path refid="${module.jdk.classpath.ricing}"/>
+    <pathelement location="${ricing.output.dir}"/>
+  </path>
+  
+  <path id="ricing.runtime.module.classpath">
+    <pathelement location="${ricing.testoutput.dir}"/>
+    <pathelement location="${ricing.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.ricing">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ricing">
+    <patternset refid="excluded.from.module.ricing"/>
+  </patternset>
+  
+  <path id="ricing.module.sourcepath">
+    <dirset dir="${module.ricing.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ricing" depends="compile.module.ricing.production,compile.module.ricing.tests" description="Compile module RICING"/>
+  
+  <target name="compile.module.ricing.production" depends="register.custom.compilers" description="Compile module RICING; production classes">
+    <mkdir dir="${ricing.output.dir}"/>
+    <javac2 destdir="${ricing.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ricing}/javac">
+      <compilerarg line="${compiler.args.ricing}"/>
+      <bootclasspath refid="ricing.module.bootclasspath"/>
+      <classpath refid="ricing.module.production.classpath"/>
+      <src refid="ricing.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ricing"/>
+    </javac2>
+    
+    <copy todir="${ricing.output.dir}">
+      <fileset dir="${module.ricing.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.ricing.tests" depends="register.custom.compilers,compile.module.ricing.production" description="compile module RICING; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.ricing" description="cleanup module">
+    <delete dir="${ricing.output.dir}"/>
+    <delete dir="${ricing.testoutput.dir}"/>
+  </target>
+</project>

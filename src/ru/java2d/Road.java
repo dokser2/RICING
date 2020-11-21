@@ -13,16 +13,18 @@ import java.util.Random;
 
 public class Road extends JPanel implements ActionListener, Runnable {
     Timer mainTimer = new Timer(20, this);
-    Image img = new ImageIcon("res/road.png").getImage();
+    Image img = new ImageIcon("res/road.png") .getImage();
 
     Player p = new Player();
     Thread enemiesFactory = new Thread(this);
+    Thread audioThread = new Thread(new AudioThread());
     ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 
     public Road() {
 
         mainTimer.start();
         enemiesFactory.start();
+        audioThread.start();
         addKeyListener(new MyKeyAdapter());
         setFocusable(true);
     }
@@ -81,6 +83,14 @@ public class Road extends JPanel implements ActionListener, Runnable {
         p.move();
         repaint();
         testCollisionWithEnemies();
+        testWin();
+    }
+
+    private void testWin() {
+        if (p.s > 20000 ){
+            JOptionPane.showMessageDialog(null,"You WIN!!!");
+            System.exit(0);
+        }
     }
 
     private void testCollisionWithEnemies() {

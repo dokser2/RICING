@@ -12,7 +12,7 @@ public class Player {
     public Rectangle getRect(){
         return new Rectangle(x,y,234,91);
     }
-    int v = 10;
+    int v = 5;
     int dv = 0;
     int s = 0;
 
@@ -44,10 +44,10 @@ public class Player {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if (key == KeyEvent.VK_RIGHT) {
-            dv = 1;
+            dv = 2;
         }
         if (key == KeyEvent.VK_LEFT) {
-            dv = -1;
+            dv = -2;
         }
         if (key == KeyEvent.VK_UP) {
             dy = -1;
